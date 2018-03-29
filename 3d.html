@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<!--攻城狮,羊我为羲:分享万岁，恭喜发财-->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta content="壹公里,3D,琅琊榜,猴年,拜年,分享,JS,四海升平,功德圆满,chrome浏览器" name="Keywords">
+	<meta content="壹公里猴年新年118好礼相送,3D琅琊榜迎新年,JS四海升平,功德圆满,chrome浏览器打开有3D效果" name="Description">
+    <script src="js/3d/three.min.js"></script>
+    <script src="js/3d/tween.min.js"></script>
+    <script src="js/3d/TrackballControls.js"></script>
+    <script src="js/3d/CSS3DRenderer.js"></script>
+    <title>菜奇3D</title>
+	<style>
+      html, body {
+        height: 100%;
+      }
+      body {
+        background-color: #FFFFFF;
+        margin: 0;
+        font-family: Arial;
+        overflow: hidden;
+      }
+      a {
+        color: rgba(0,0,255,1);
+      }
+	  a:hover{ color: rgba(255,0,0,1);}
+      #info {
+        position: absolute;
+        width: 100%;
+        color: #ffffff;
+        padding: 5px;
+        font-family: Monospace;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+      }
+      #menu {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+      }
+	  
+      .element {
+        width: 140px;
+        height: 180px;
+        cursor: default;
+      }
+      .element:hover {
+        box-shadow: 0px 0px 20px rgba(255,255,0,1);
+        border:1px solid  rgba(0,0,255,1);
+      }
+      .element .number {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 10px;
+        color:rgba(0,0,255,1);
+      }
+      .element .symbol {
+		display:none;
+        position: absolute;
+        top: 40px;
+        width: 100%;
+        font-size: 70px;
+        text-align: center;
+        color: rgba(255,255,255,0);
+        font-weight: bold;
+        -webkit-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+        -moz-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+        -o-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+        -ms-filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+        filter: drop-shadow(0px 0px 20px rgba(0,255,255,0.95));
+      }
+      .element .details {
+        position: absolute;
+        top: 135px;
+        width: 100%;
+        font-size: 18px;
+        text-align: center;
+        color: rgba(0,0,255,0.9);
+      }
+      button {
+		color:#000;
+        background: transparent;
+        outline: 1px solid rgba(0,0,0,0.75);
+        border: 1px;
+        padding: 5px 10px;
+        cursor: pointer;
+		font-size:16px;
+		font-weight:400;
+      }
+      button:hover {
+        background-color:rgba(255,0,0,0.7);
+		font-weight:bold;
+		/*font:"楷体";*/
+      }
+	  button:focus{ 
+	  	background-color:rgba(255,0,0,0.85) !important;
+		font-weight:bold;
+		/*font:"楷体";*/
+		}
+    </style>
+    <script>
+			var init = function(){
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
+				camera.position.z = 1800;
+
+				scene = new THREE.Scene();
+
+				for ( var i = 0; i < table.length; i ++ ) {
+
+					var item = table[ i ];
+					var j=i+1;
+					var element = document.createElement( 'div' );
+					element.className = 'element';
+					element.style.background='url(img/3d/'+j+'.jpg)';
+					/*背景图*/
+					/*if(i==26){element.style.background='url(0/phb'+j+'.jpg)';};*/
+
+					var number = document.createElement( 'div' );
+					number.className = 'number';
+					number.textContent = i + 1;
+					element.appendChild( number );
+
+					var symbol = document.createElement( 'div' );
+					symbol.className = 'symbol';
+					symbol.textContent = item[ 0 ];
+					element.appendChild( symbol );
+
+					var details = document.createElement( 'div' );
+					details.className = 'details';
+					/*if(i==26){details.innerHTML ="<a href='http://tieba.baidu.com/f?kw=%D0%A1%D0%A1q&fr=home'>"+ item[ 1 ] + '</a>'+'<br>' + item[ 2 ];};*/
+					details.innerHTML ="<a href='"+item[0]+"'>"+ item[ 1 ] + '</a>'+'<br>' + item[ 2 ];
+					
+					element.appendChild( details );
+
+					var object = new THREE.CSS3DObject( element );
+					object.position.x = Math.random() * 4000 - 2000;
+					object.position.y = Math.random() * 4000 - 2000;
+					object.position.z = Math.random() * 4000 - 2000;
+					scene.add( object );
+
+					objects.push( object );
+				}
+
+				
+
+
+				// table
+
+				for ( var i = 0; i < objects.length; i ++ ) {
+					var item = table[ i ];
+					var object = objects[ i ];
+
+					var object = new THREE.Object3D();
+					object.position.x = ( item[ 3 ] * 160 ) - 1540;
+					object.position.y = - ( item[ 4 ] * 200 ) + 1100;
+
+					targets.table.push( object );
+
+				}
+
+				// sphere
+
+				var vector = new THREE.Vector3();
+
+				for ( var i = 0, l = objects.length; i < l; i ++ ) {
+
+					var object = objects[ i ];
+
+					var phi = Math.acos( -1 + ( 2 * i ) / l );
+					var theta = Math.sqrt( l * Math.PI ) * phi;
+
+					var object = new THREE.Object3D();
+
+					object.position.x = 1000 * Math.cos( theta ) * Math.sin( phi );
+					object.position.y = 1000 * Math.sin( theta ) * Math.sin( phi );
+					object.position.z = 1000 * Math.cos( phi );
+
+					vector.copy( object.position ).multiplyScalar( 2 );
+
+					object.lookAt( vector );
+
+					targets.sphere.push( object );
+
+				}
+				
+				// helix
+
+				var vector = new THREE.Vector3();
+
+				for ( var i = 0, l = objects.length; i < l; i ++ ) {
+
+					var object = objects[ i ];
+
+					var phi = i * 0.175 + Math.PI;
+
+					var object = new THREE.Object3D();
+
+					object.position.x = 1100 * Math.sin( phi );
+					object.position.y = - ( i * 8 ) + 450;
+					object.position.z = 1100 * Math.cos( phi );
+
+					vector.copy( object.position );
+					vector.x *= 2;
+					vector.z *= 2;
+
+					object.lookAt( vector );
+
+					targets.helix.push( object );
+
+				}
+				
+				// grid
+
+				for ( var i = 0; i < objects.length; i ++ ) {
+
+					var object = objects[ i ];
+
+					var object = new THREE.Object3D();
+
+					object.position.x = ( ( i % 5 ) * 400 ) - 800;
+					object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
+					object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
+
+					targets.grid.push( object );
+
+				}
+
+				//
+
+				renderer = new THREE.CSS3DRenderer();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.domElement.style.position = 'absolute';
+				renderer.domElement.style.top = 0;
+				document.getElementById( 'container' ).appendChild( renderer.domElement );
+
+				//
+
+				controls = new THREE.TrackballControls( camera, renderer.domElement );
+				controls.rotateSpeed = 0.5;
+				controls.addEventListener( 'change', render );
+
+				var button = document.getElementById( 'helix' );
+				button.addEventListener( 'click', function ( event ) {
+
+					transform( targets.helix, 2000 );
+
+				}, false );
+				
+				var button = document.getElementById( 'table' );
+				button.addEventListener( 'click', function ( event ) {
+
+					transform( targets.table, 2000 );
+
+				}, false );
+
+				var button = document.getElementById( 'sphere' );
+				button.addEventListener( 'click', function ( event ) {
+
+					transform( targets.sphere, 2000 );
+
+				}, false );
+
+				
+
+				var button = document.getElementById( 'grid' );
+				button.addEventListener( 'click', function ( event ) {
+
+					transform( targets.grid, 2000 );
+
+				}, false );
+
+				transform( targets.sphere, 5000 );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			var transform = function( targets, duration ) {
+
+				TWEEN.removeAll();
+
+				for ( var i = 0; i < objects.length; i ++ ) {
+
+					var object = objects[ i ];
+					var target = targets[ i ];
+
+					new TWEEN.Tween( object.position )
+						.to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+					new TWEEN.Tween( object.rotation )
+						.to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+				}
+
+				new TWEEN.Tween( this )
+					.to( {}, duration * 2 )
+					.onUpdate( render )
+					.start();
+			}
+
+			var onWindowResize = function() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			var animate = function(){
+				requestAnimationFrame( animate );
+				TWEEN.update();
+				controls.update();
+			}
+
+			var render = function(){
+				renderer.render( scene, camera );
+			}
+    </script>
+  </head>
+  <body>
+      <div id="container">
+      </div>
+      <div id="info"></div>
+      <div id="menu">
+      	<img src="0/zb.png">
+        <button id="grid">四 海</button><button id="table">升 平</button>
+        <button id="helix">功 德</button><button id="sphere">圆 满</button>
+        <img src="0/yb.png">
+        <br><br>
+        <div style="font-size:12px; font-weight:bold; color:#595959; line-height:20px;">
+        Share to everyone 给大家拜年了，恭喜发财[用chrome打开有3D效果哦]</br>
+        联系方式:18038035919或15218725245@139.com  <a href="http://www.miitbeian.gov.cn/" style="color:#595959;">粤ICP备15106989号</a>
+        </div>
+      </div>
+  </body>
+</html>
+<script>
+	var table = [
+		[ "http://cpc.people.com.cn/gbzl/html/121000287.html", "苦瓜", "菜奇网", 1, 1 ],
+		[ "http://cpc.people.com.cn/gbzl/html/121000288.html", "鲜菜", "菜奇网", 18, 1 ],
+		[ "http://renwu.hexun.com/figure_873.shtml", "西红柿", "菜奇网", 1, 2 ],
+		[ "http://renwu.hexun.com/figure_8476.shtml", "普  京", "菜奇网", 2, 2 ],
+		[ "http://renwu.hexun.com/figure_7572.shtml", "潘基文", "联合国秘书长", 13, 2 ],
+		[ "http://www.jiemian.com/article/358220.html", "伊丽莎白二世", "现任英国女王", 14, 2 ],
+		[ "http://renwu.hexun.com/figure_829.shtml", "比尔盖茨", "微软创始人", 15, 2 ],
+		[ "http://renwu.hexun.com/figure_1068.shtml", "扎克伯格", "Facebook创始人", 16, 2 ],
+		[ "http://renwu.hexun.com/figure_666.shtml", "马  云", "阿里董事主席", 17, 2 ],
+		[ "http://renwu.hexun.com/figure_415.shtml", "马化腾", "腾讯董事主席", 18, 2 ],
+		[ "http://renwu.hexun.com/figure_668.shtml", "李彦宏", "百度董事长", 1, 3 ],
+		[ "http://renwu.hexun.com/figure_848.shtml", "张瑞敏", "海尔董事主席", 2, 3 ],
+		[ "http://renwu.hexun.com/figure_694.shtml", "任正非", "华为总裁", 13, 3 ],
+		[ "http://renwu.hexun.com/figure_844.shtml", "柳传志", "联想名誉董事", 14, 3 ],
+		[ "http://renwu.hexun.com/figure_148.shtml", "李嘉诚", "长江实业董事", 15, 3 ],
+		[ "http://renwu.hexun.com/figure_195.shtml", "郭台铭", "富士康董事长", 16, 3 ],
+		[ "http://renwu.hexun.com/figure_467.shtml", "王健林", "万达董事长", 17, 3 ],
+		[ "http://renwu.hexun.com/figure_8593.shtml", "屠呦呦", "诺贝尔医学奖", 18, 3 ],
+		[ "http://renwu.hexun.com/figure_1635.shtml", "袁隆平", "杂交水稻之父", 1, 4 ],
+		[ "http://renwu.hexun.com/figure_791.shtml", "巴菲特", "全球投资者", 2, 4 ],
+		[ "http://renwu.hexun.com/figure_513.shtml", "索罗斯", "货币投机家", 3, 4 ],
+		[ "http://www.harvard.edu", "哈  佛", "私立研究型大学", 4, 4 ],
+		[ "http://www.stanford.edu", "斯坦福", "私立研究型大学", 5, 4 ],
+		[ "http://www.mit.edu", "麻省理工", "理工大学之最", 6, 4 ],
+		[ "http://www.cam.ac.uk", "剑  桥", "联邦制大学", 7, 4 ],
+		[ "http://www.tsinghua.edu.cn", "清  华", "中国公立大学", 8, 4 ],
+		[ "http://www.pku.edu.cn", "北  大", "中国国立大学",9,4],
+		[ "http://wwf.org", "保护基金会", "独立非政府组织", 10, 4 ],
+		[ "http://www.fon.org.cn", "自然之友", "民间环保组织", 11, 4 ],
+		[ "http://www.worldanimalprotection.org.cn", "动物保护协会", "世界动物保护", 12, 4 ],
+		[ "http://www.onefoundation.cn", "壹基金", "民间公募基金", 13, 4 ],
+		[ "http://www.chinacharityfederation.org", "中华慈善总会", "非营利公益", 14, 4 ],
+		[ "http://www.cwpf.org.cn", "和平基金会", "国际中立公益", 15, 4 ],
+		[ "http://www.icrc.org", "国际红十字会", "独立中立组织", 16, 4 ],
+		[ "http://www.unicef.cn", "儿童基金会", "全球儿童保护", 17, 4 ],
+		[ "http://www.unep.org", "环境规划署", "全球环境规划", 18, 4 ],
+		[ "http://www.tnc.org.cn", "大自然保护协会", "国际自然保护", 1, 5 ],
+		[ "http://wef.hk", "世界应急联合会", "全球应急救援", 2, 5 ],
+		[ "http://www.facebook.com", "Facebook", "社交网络", 3, 5 ],
+		[ "http://www.apple.com", "苹  果", "高科技", 4, 5 ],
+		[ "http://www.qq.com", "腾  讯", "QQ和微信", 5, 5 ],
+		[ "http://www.alibabagroup.com", "阿里巴巴集团", "网上交易市场", 6, 5 ],
+		[ "https://www.baidu.com", "百  度", "中文搜索引擎", 7, 5 ],
+		[ "http://www.sina.com.cn", "新  浪", "社交，微博", 8, 5 ],
+		[ "http://www.360.com", "奇虎360", "杀毒网络安全", 9, 5 ],
+		[ "http://www.youku.com", "优  酷", "视频分享网站", 10, 5 ],
+		[ "http://www.iqiyi.com", "爱奇艺", "简单想，做", 11, 5 ],
+		[ "http://www.letv.com", "乐  视", "互联网视频", 12, 5 ],
+		[ "https://www.tmall.com", "天  猫", "在线商超", 13, 5 ],
+		[ "http://www.jd.com", "京  东", "自营式电商", 14, 5 ],
+		[ "http://www.haier.com", "海  尔", "全球大型家电", 15, 5 ],
+		[ "http://www.gree.com.cn", "格  力", "电器空调", 16, 5 ],
+		[ "http://www.suning.com", "苏宁易购", "购物商城", 17, 5 ],
+		[ "http://www.gome.com.cn", "国  美", "家电连锁", 18, 5 ],
+		[ "http://www.wal-martchina.com", "沃尔玛", "零售连锁", 1, 6 ],
+		[ "http://www.carrefour.com.cn", "家乐福", "大卖场", 2, 6 ],
+		[ "http://www.amazon.cn", "亚马逊", "电子商务", 4, 9 ],
+		[ "http://www.vip.com", "唯品会", "特卖商城", 5, 9 ],
+		[ "http://www.jumei.com", "聚美优品", "化妆品商城", 6, 9 ],
+		[ "https://www.taobao.com", "淘  宝", "复合型商务", 7, 9 ],
+		[ "http://www.mi.com", "小  米", "手机研发", 8, 9 ],
+		[ "http://www.huawei.com", "华  为", "民营通讯科技", 9, 9 ],
+		[ "http://www.zte.com.cn", "中  兴", "通信供应商", 10, 9 ],
+		[ "http://www.lenovo.com.cn", "联  想", "PC生产厂商", 11, 9 ],
+		[ "http://www.nokia.com", "诺基亚", "移动通信产品", 12, 9 ],
+		[ "http://www.qualcomm.cn", "高  通", "通信芯片研发", 13, 9 ],
+		[ "http://www.ibm.com", "I B M", "云计算解决方案", 14, 9 ],
+		[ "http://www.wanda.cn", "万  达", "商业综合体", 15, 9 ],
+		[ "http://www.vanke.com", "万  科", "中国住宅开发", 16, 9 ],
+		[ "http://www.foxconn.com.cn", "富士康", "全球代工厂", 17, 9 ],
+		[ "http://www.10086.cn", "中国移动", "移动通信运营", 18, 9 ],
+		[ "http://www.10010.com", "中国联通", "固话移动运营", 4, 6 ],
+		[ "http://www.189.cn", "中国电信", "大型国有通信", 5, 6 ],
+		[ "http://www.icbc.com.cn", "工商银行", "中国商业银行", 6, 6 ],
+		[ "http://www.ccb.com", "建设银行", "国有商业银行", 7, 6 ],
+		[ "http://www.abchina.com", "农业银行", "国有商业银行", 8, 6 ],
+		[ "https://www.alipay.com", "支付宝", "第三方支付平台", 9, 6 ],
+		[ "https://pay.weixin.qq.com", "微信支付", "微信客户端支付", 10, 6 ],
+		[ "http://www.paypal.com", "paypal", "国际贸易支付", 11, 6 ],
+		[ "https://www.uber.com.cn", "Uber优步", "打车APP", 12, 6 ],
+		[ "http://www.xiaojukeji.com", "滴  滴", "打车平台", 13, 6 ],
+		[ "http://www.coca-cola.com.cn", "可口可乐", "饮料厂商", 14, 6 ],
+		[ "http://www.womai.com", "中  粮", "农产品供应商", 15, 6 ],
+		[ "http://www.sf-express.com", "顺  丰", "全球快递", 16, 6 ],
+		[ "https://www.ups.com", "UPS快递", "快递承运递送", 17, 6 ],
+		[ "http://www.fedex.com", "FedEx", "国际快递", 18, 6 ],
+		[ "http://56.1688.com", "菜鸟物流", "智能物流骨干网", 1, 7 ],
+		[ "http://www.ems.com.cn", "E M S", "国际邮件快递", 2, 7 ],
+		[ "http://www.58.com", "58同城", "生活服务平台", 4, 10 ],
+		[ "http://www.ganji.com", "赶  集", "专业分类信息", 5, 10 ],
+		[ "http://www.12306.cn", "12306网", "火车票官方网", 6, 10 ],
+		[ "http://www.ctrip.com", "携  程", "旅游在线票务", 7, 10 ],
+		[ "http://www.tuniu.com", "途  牛", "旅游预订服务", 8, 10 ],
+		[ "http://china.nba.com", "N B A", "职业篮球", 9, 10 ],
+		[ "http://www.yhd.com", "1号店", "网上超市", 10, 10 ],
+		[ "http://www.dangdang.com", "当  当", "网上书城", 11, 10 ],
+		[ "http://www.samsung.com", "三  星", "韩国家族企业", 12, 10 ],
+		[ "http://www.ckph.com.hk", "长江实业", "香港地产投资", 13, 10 ],
+		[ "http://www.snda.com", "盛  大", "娱乐媒体服务", 14, 10 ],
+		[ "http://www.zhaopin.com", "智  联", "人力资源服务", 15, 10 ],
+		[ "http://www.51job.com", "前程无忧", "人力资源服务", 16, 10 ],
+		[ "http://www.liepin.com", "猎  聘", "猎头职业经理人", 17, 10 ],
+		[ "http://www.renren.com", "人人网", "实名制社交", 18, 10 ],
+		[ "http://www.tianya.cn", "天  涯", "网络社区", 4, 7 ],
+		[ "http://www.cntv.cn", "央  视", "中央新闻", 5, 7 ],
+		[ "http://www.huanqiu.com", "环  球", "国际资讯门户", 6, 7 ],
+		[ "http://www.autohome.com.cn", "汽车之家", "专业汽车门户", 7, 7 ],
+		[ "http://www.qatarairways.com", "卡塔尔航空", "全球最佳商务舱", 8, 7 ],
+		[ "http://www.mengniu.com.cn", "蒙  牛", "乳制品供应商", 9, 7 ],
+		[ "http://www.youtube.com", "YouTube", "世界视频网站", 10, 7 ],
+		[ "http://weibo.com/hejiong", "何  炅", "湖南卫视主持人", 11, 7 ],
+		[ "http://weibo.com/hntvwanghan", "汪涵", "湖南卫视主持人", 12, 7 ],
+		[ "http://t.qq.com/newsyulu", "柴  静", "记者，主持人", 13, 7 ],
+		[ "http://weibo.com/moyanblog", "莫  言", "诺贝尔文学奖", 14, 7 ],
+		[ "http://weibo.com/hanhan", "韩  寒", "作家，赛车手", 15, 7 ],
+		[ "http://blog.sina.com.cn/stephenchow622", "周星驰", "喜剧演员导演", 16, 7 ],
+		[ "http://weibo.com/dengchao", "邓  超", "自称是学霸", 17, 7 ],
+		[ "http://weibo.com/tfent", "TFBOYS", "少年偶像组合", 18, 7 ]
+	];
+	
+	var camera, scene, renderer, geometry, material, mesh, controls;
+	var objects = [];
+	var targets = { table: [], sphere: [], helix: [], grid: [] };
+	init();
+	animate();
+</script> 
+

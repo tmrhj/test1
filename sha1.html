@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript" src="js/base64.js"></script>
+		<script type="text/javascript" src="js/sha1.js"></script>
+<script type="text/javascript">  
+        var b = new Base64();  
+        var str = b.encode("{id:9017732929832,name:zhansan,pwd:1234567}");  
+         
+         var str1 = "{id:9017732929832,name:zhansan,pwd:1234567}";
+         
+         var sha1 = b64_sha1(str1);
+         var sha2 = hex_sha1(str1);
+         alert("base64:"+sha1)  ;
+         alert("hex:"+sha2)  ;
+         
+         Console.log("base64:"+sha1 + " hex:"+sha2);
+         
+        
+</script>  
+	</head>
+	<body>
+	</body>
+</html>
